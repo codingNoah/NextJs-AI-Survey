@@ -1,0 +1,171 @@
+import { useState, useCallback } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Upload, FileSpreadsheet, X, CheckCircle2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+interface DataUploadProps {
+  onDataUploaded: (data: any[]) => void;
+}
+
+export const DataUpload = ({ onDataUploaded }: DataUploadProps) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const { toast } = useToast();
+
+  const parseCSV = (text: string): any[] => {
+    const lines = text.split('\n');
+    const headers = lines[0].split(',').map(h => h.trim());
+    
+    return lines.slice(1)
+      .filter(line => line.trim())
+      .map(line => {
+        const values = line.split(',');
+        const row: any = {};
+        headers.forEach((header, i) => {
+          row[header] = values[i]?.trim() || '';
+        });
+        return row;
+      });
+  };
+
+  const handleFile = useCallback((file: File) => {
+    if (!file.name.endsWith('.csv') && !file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload a CSV or Excel file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadedFile(file);
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      try {
+        const data = parseCSV(text);
+        onDataUploaded(data);
+        toast({
+          title: "File uploaded successfully",
+          description: `Parsed ${data.length} rows from ${file.name}`,
+        });
+      } catch (error) {
+        toast({
+          title: "Error parsing file",
+          description: "Please check your file format",
+          variant: "destructive",
+        });
+      }
+    };
+    reader.readAsText(file);
+  }, [onDataUploaded, toast]);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  }, [handleFile]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleFile(file);
+  };
+
+  const clearFile = () => {
+    setUploadedFile(null);
+    onDataUploaded([]);
+  };
+
+  return (
+    <section className="py-20 bg-gradient-subtle">
+      <div className="container mx-auto px-4">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="text-center space-y-2">
+            <h2 className="text-4xl font-bold">Upload Your Dataset</h2>
+            <p className="text-muted-foreground">
+              Support for CSV and Excel files up to 20MB
+            </p>
+          </div>
+
+          <Card
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={`p-12 transition-all duration-300 cursor-pointer shadow-card hover:shadow-glow ${
+              isDragging ? 'border-accent bg-accent/5 scale-105' : ''
+            }`}
+          >
+            {!uploadedFile ? (
+              <div className="text-center space-y-4">
+                <div className="flex justify-center">
+                  <div className="p-6 rounded-full bg-primary/10">
+                    <Upload className="h-12 w-12 text-primary" />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold">
+                    Drop your file here
+                  </h3>
+                  <p className="text-muted-foreground">
+                    or click to browse
+                  </p>
+                </div>
+
+                <div className="flex gap-2 justify-center text-sm text-muted-foreground">
+                  <FileSpreadsheet className="h-4 w-4" />
+                  <span>CSV, XLS, XLSX</span>
+                </div>
+
+                <input
+                  type="file"
+                  accept=".csv,.xlsx,.xls"
+                  onChange={handleFileInput}
+                  className="hidden"
+                  id="file-upload"
+                />
+                <label htmlFor="file-upload">
+                  <Button variant="accent" size="lg" asChild>
+                    <span>Browse Files</span>
+                  </Button>
+                </label>
+              </div>
+            ) : (
+              <div className="text-center space-y-4">
+                <div className="flex justify-center">
+                  <div className="p-6 rounded-full bg-accent/10">
+                    <CheckCircle2 className="h-12 w-12 text-accent" />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold">File Uploaded</h3>
+                  <p className="text-muted-foreground">{uploadedFile.name}</p>
+                </div>
+
+                <Button variant="outline" onClick={clearFile}>
+                  <X className="mr-2 h-4 w-4" />
+                  Remove File
+                </Button>
+              </div>
+            )}
+          </Card>
+        </div>
+      </div>
+    </section>
+  );
+};
