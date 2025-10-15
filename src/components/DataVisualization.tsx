@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { DraggableCharts } from "@/components/DraggableCharts";
+import { motion } from "framer-motion";
 
 interface DataVisualizationProps {
   data: any[];
@@ -38,15 +40,28 @@ export const DataVisualization = ({ data }: DataVisualizationProps) => {
   return (
     <section className="py-20 bg-gradient-subtle">
       <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center space-y-2">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <motion.div 
+            className="text-center space-y-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <h2 className="text-4xl font-bold">Data Insights</h2>
             <p className="text-muted-foreground">
-              Interactive visualizations of your uploaded data
+              Interactive visualizations with drag-and-drop layout
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <DraggableCharts data={data} />
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" style={{ display: 'none' }}>
             <Card className="p-6 shadow-card">
               <h3 className="text-xl font-semibold mb-4">Bar Chart Analysis</h3>
               <ResponsiveContainer width="100%" height={300}>

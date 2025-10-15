@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Sparkles, Upload, BarChart3 } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
+import { motion } from "framer-motion";
 
 interface HeroProps {
   onNavigate: (section: 'upload' | 'generate' | 'visualize') => void;
@@ -23,20 +24,40 @@ export const Hero = ({ onNavigate }: HeroProps) => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-1000">
+        <motion.div 
+          className="max-w-4xl mx-auto space-y-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground leading-tight">
+            <motion.h1 
+              className="text-5xl md:text-7xl font-bold text-primary-foreground leading-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+            >
               AI-Powered Survey
               <span className="block bg-gradient-accent bg-clip-text text-transparent">
                 Data Analytics
               </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-primary-foreground/90 max-w-2xl mx-auto">
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl text-primary-foreground/90 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
               Upload your data, generate intelligent questions with AI, and visualize insights instantly
-            </p>
+            </motion.p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+          >
             <Button 
               variant="hero" 
               size="lg"
@@ -55,10 +76,15 @@ export const Hero = ({ onNavigate }: HeroProps) => {
               <Sparkles className="mr-2 h-5 w-5" />
               Generate Questions
             </Button>
-          </div>
+          </motion.div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-16">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+          >
             <div className="p-6 rounded-xl bg-background/10 backdrop-blur-sm border border-primary-foreground/20 hover:bg-background/20 transition-all duration-300 hover:shadow-glow">
               <Upload className="h-12 w-12 text-accent mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-primary-foreground mb-2">
@@ -88,8 +114,8 @@ export const Hero = ({ onNavigate }: HeroProps) => {
                 Interactive charts and real-time data visualization
               </p>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

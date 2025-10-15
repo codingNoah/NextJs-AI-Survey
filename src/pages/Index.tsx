@@ -3,8 +3,10 @@ import { Hero } from "@/components/Hero";
 import { DataUpload } from "@/components/DataUpload";
 import { QuestionGenerator } from "@/components/QuestionGenerator";
 import { DataVisualization } from "@/components/DataVisualization";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Index = () => {
   const [uploadedData, setUploadedData] = useState<any[]>([]);
@@ -58,6 +60,7 @@ const Index = () => {
               >
                 Visualize
               </button>
+              <ThemeToggle />
               <Button variant="accent" size="sm">
                 Get Started
               </Button>

@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, FileSpreadsheet, X, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DataUploadProps {
   onDataUploaded: (data: any[]) => void;
@@ -94,21 +95,31 @@ export const DataUpload = ({ onDataUploaded }: DataUploadProps) => {
     <section className="py-20 bg-gradient-subtle">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto space-y-6">
-          <div className="text-center space-y-2">
+          <motion.div 
+            className="text-center space-y-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <h2 className="text-4xl font-bold">Upload Your Dataset</h2>
             <p className="text-muted-foreground">
               Support for CSV and Excel files up to 20MB
             </p>
-          </div>
+          </motion.div>
 
-          <Card
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            className={`p-12 transition-all duration-300 cursor-pointer shadow-card hover:shadow-glow ${
-              isDragging ? 'border-accent bg-accent/5 scale-105' : ''
-            }`}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
           >
+            <Card
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              className={`p-12 transition-all duration-300 cursor-pointer shadow-card hover:shadow-glow ${
+                isDragging ? 'border-accent bg-accent/5 scale-105' : ''
+              }`}
+            >
             {!uploadedFile ? (
               <div className="text-center space-y-4">
                 <div className="flex justify-center">
@@ -164,6 +175,7 @@ export const DataUpload = ({ onDataUploaded }: DataUploadProps) => {
               </div>
             )}
           </Card>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,22 +1,35 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Copy, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface QuestionGeneratorProps {
   dataColumns?: string[];
 }
 
 export const QuestionGenerator = ({ dataColumns = [] }: QuestionGeneratorProps) => {
+  const [title, setTitle] = useState("");
   const [prompt, setPrompt] = useState("");
   const [questions, setQuestions] = useState<string[]>([]);
+  const [questionInputs, setQuestionInputs] = useState<string[]>(Array(5).fill(""));
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const { toast } = useToast();
 
   const generateQuestions = async () => {
+    if (!title.trim()) {
+      toast({
+        title: "Title required",
+        description: "Please enter a survey title",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsGenerating(true);
     
     // Simulate AI generation (in real app, this would call an AI API)
@@ -30,6 +43,7 @@ export const QuestionGenerator = ({ dataColumns = [] }: QuestionGeneratorProps) 
       ];
       
       setQuestions(mockQuestions);
+      setQuestionInputs(mockQuestions);
       setIsGenerating(false);
       toast({
         title: "Questions generated!",
@@ -63,13 +77,24 @@ export const QuestionGenerator = ({ dataColumns = [] }: QuestionGeneratorProps) 
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">
-                  Describe your survey goals
+                  Survey Title
+                </label>
+                <Input
+                  placeholder="E.g., 'Customer Satisfaction Survey 2025'"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Describe your survey goals (optional)
                 </label>
                 <Textarea
                   placeholder="E.g., 'Generate questions about customer satisfaction and product feedback for our e-commerce platform'"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  rows={4}
+                  rows={3}
                   className="resize-none"
                 />
               </div>
@@ -94,7 +119,7 @@ export const QuestionGenerator = ({ dataColumns = [] }: QuestionGeneratorProps) 
                 variant="hero"
                 size="lg"
                 onClick={generateQuestions}
-                disabled={isGenerating || !prompt}
+                disabled={isGenerating}
                 className="w-full"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
@@ -103,37 +128,60 @@ export const QuestionGenerator = ({ dataColumns = [] }: QuestionGeneratorProps) 
             </div>
           </Card>
 
-          {questions.length > 0 && (
-            <div className="space-y-4 animate-in fade-in duration-500">
-              <h3 className="text-2xl font-semibold">Generated Questions</h3>
-              {questions.map((question, index) => (
-                <Card
-                  key={index}
-                  className="p-4 hover:shadow-card transition-all duration-300"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <span className="text-sm font-medium text-muted-foreground">
-                        Q{index + 1}
-                      </span>
-                      <p className="text-lg mt-1">{question}</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => copyQuestion(question, index)}
-                    >
-                      {copiedIndex === index ? (
-                        <CheckCircle2 className="h-4 w-4 text-accent" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
+          <AnimatePresence>
+            {questions.length > 0 && (
+              <motion.div 
+                className="space-y-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3 className="text-2xl font-semibold">Dynamic Question Form</h3>
+                <Card className="p-6 shadow-card">
+                  <div className="space-y-4">
+                    {questionInputs.map((question, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1, duration: 0.3 }}
+                        className="space-y-2"
+                      >
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Question {index + 1}
+                          </label>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => copyQuestion(question, index)}
+                            className="h-8 w-8"
+                          >
+                            {copiedIndex === index ? (
+                              <CheckCircle2 className="h-4 w-4 text-accent" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
+                        <Input
+                          value={question}
+                          onChange={(e) => {
+                            const newInputs = [...questionInputs];
+                            newInputs[index] = e.target.value;
+                            setQuestionInputs(newInputs);
+                          }}
+                          placeholder={`Enter question ${index + 1}`}
+                          className="text-base"
+                        />
+                      </motion.div>
+                    ))}
                   </div>
                 </Card>
-              ))}
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </section>
