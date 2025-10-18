@@ -7,8 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "preview": "next start"
+    "lint": "next lint",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.0",
@@ -44,6 +44,7 @@
     "@tanstack/react-query": "^5.83.0",
     "@types/react-grid-layout": "^1.3.5",
     "axios": "^1.12.2",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -74,7 +75,9 @@
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@tailwindcss/typography": "^0.5.16",
-    "@types/node": "^22.16.5",
+    "@types/jest": "^30.0.0",
+    "@types/next-auth": "^3.13.0",
+    "@types/node": "^22.18.11",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "autoprefixer": "^10.4.21",
@@ -83,8 +86,11 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
+    "jest": "^30.2.0",
     "postcss": "^8.5.6",
+    "supertest": "^7.1.4",
     "tailwindcss": "^3.4.17",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0"
   }

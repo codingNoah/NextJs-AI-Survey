@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/prisma";
 import { type AuthOptions } from "next-auth";
+import { compare, hash } from "bcryptjs";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -27,14 +28,54 @@ export const authOptions: AuthOptions = {
         },
       },
       async authorize(credentials) {
-        console.log("credentials", credentials);
-        return null;
-        // const response = await fetch(request);
-        // if (!response.ok) return null;
-        // return (await response.json()) ?? null;
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error("Please enter both email and password.");
+          }
+
+          const email = credentials.email.toLowerCase();
+
+          let user = await prisma.user.findUnique({
+            where: { email },
+          });
+
+          if (user) {
+            if (!user?.password)
+              throw new Error("User must sign in with Google.");
+
+            const isValid = await compare(credentials.password, user.password);
+            if (!isValid) throw new Error("Invalid email or password.");
+
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              image: user.image,
+            };
+          } else {
+            const hashedPassword = await hash(credentials.password, 10);
+
+            user = await prisma.user.create({
+              data: {
+                email,
+                name: email.split("@")[0],
+                password: hashedPassword,
+              },
+            });
+
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              image: user.image,
+            };
+          }
+        } catch (error) {
+          console.error("Authorize error:", error);
+          throw new Error("Authentication failed");
+        }
       },
     }),
-    // ...add more providers here
   ],
   callbacks: {
     async jwt({ token, user }) {
