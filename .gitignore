@@ -137,3 +137,4 @@ bun.lockb
 # ------------------------------
 .Trashes
 .nfs*
+.vercel

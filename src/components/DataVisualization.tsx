@@ -16,19 +16,12 @@ import {
 import { DraggableCharts } from "@/components/DraggableCharts";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import { Dataset } from "@prisma/client";
+import { Dataset } from "@/types/data-set";
 
 interface DataVisualizationProps {
   data: Dataset;
   dataSetID: string;
 }
-
-const COLORS = [
-  "hsl(240, 60%, 45%)",
-  "hsl(180, 70%, 50%)",
-  "hsl(260, 70%, 55%)",
-  "hsl(200, 80%, 60%)",
-];
 
 export const DataVisualization = ({
   data,

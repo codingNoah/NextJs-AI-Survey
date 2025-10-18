@@ -1,10 +1,12 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth/authOptions";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-export const responseSchema = z.object({
+const responseSchema = z.object({
   answers: z
     .array(z.string().min(1, "Answer cannot be empty"))
     .nonempty("At least one answer is required"),

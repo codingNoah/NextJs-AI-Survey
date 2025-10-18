@@ -1,9 +1,11 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { generateQuestions } from "@/lib/utils";
+import { authOptions } from "@/lib/auth/authOptions";
 
 const questionsSchema = z.object({
   title: z.string().min(3),
@@ -24,7 +26,7 @@ export async function POST(req: Request) {
     const survey = await prisma.survey.create({
       data: {
         title,
-        questions: await generateQuestions(title, prompt), // can be populated later by AI
+        questions: await generateQuestions(title, prompt),
         userId: user.id,
       },
     });

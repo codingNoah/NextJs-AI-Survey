@@ -6,10 +6,7 @@ export const metadata: Metadata = {
   title: "SurveyAI",
   description: "AI-powered data insights for everyone.",
   icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/icon.png", type: "image/png" },
-    ],
+    icon: [{ url: "/favicon.ico" }, { url: "/icon.png", type: "image/png" }],
     apple: "/apple-icon.png",
   },
 };
@@ -27,6 +24,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
-

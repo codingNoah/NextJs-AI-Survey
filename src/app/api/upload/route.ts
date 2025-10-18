@@ -1,7 +1,9 @@
+export const runtime = "nodejs";
+
 import { parse } from "csv-parse/sync"; // or your own parser
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth/authOptions";
 import { computeDatasetStats, generateDataSetInsight } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
@@ -18,17 +20,14 @@ export async function POST(req: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const text = buffer.toString("utf-8");
 
-    // ✅ Parse CSV into JSON
     const records = parse(text, {
       columns: true,
       skip_empty_lines: true,
     });
 
-    // ✅ Generate AI insight
     const stats = computeDatasetStats(records);
     const insight = await generateDataSetInsight(records, stats);
-    // ✅ Save to DB
-    console.log("insight", insight);
+
     const dataset = await prisma.dataset.create({
       data: {
         filename: file.name,

@@ -28,6 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { Dataset } from "@prisma/client";
+import { DraggableChartsProps } from "@/types/data-set";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -37,31 +38,6 @@ const COLORS = [
   "hsl(260, 70%, 55%)",
   "hsl(200, 80%, 60%)",
 ];
-
-interface DatasetSummary {
-  insight: string;
-  stats: {
-    averages: { ResponseID: number; Age: number; Satisfaction: number };
-    counts: {
-      Gender: { Male: number; Female: number };
-      Recommend: { Yes: number; No: number };
-      UsageFrequency: { Daily: number; Weekly: number; Monthly: number };
-    };
-    correlations: Record<string, number>;
-  };
-}
-
-interface Dataset {
-  id: string;
-  filename: string;
-  summary: DatasetSummary;
-  createdAt: string;
-  userId: string;
-}
-
-interface DraggableChartsProps {
-  dataset: Dataset;
-}
 
 const STORAGE_KEY = "dashboard-layout";
 

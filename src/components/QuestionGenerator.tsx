@@ -62,6 +62,9 @@ export const QuestionGenerator = ({
     handleSubmit: handleResponseSubmit,
     formState: { errors: responseErrors, isSubmitting: isSubmittingResponse },
   } = form;
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const { fields } = useFieldArray({
     control,
     name: "answers",

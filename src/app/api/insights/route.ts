@@ -1,13 +1,11 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth/authOptions";
 
-interface Params {
-  params: { id: string };
-}
-
-export async function GET(req: Request, { params }: Params) {
+export async function GET(req: Request) {
   try {
     const { user } = await getServerSession(authOptions);
     const { searchParams } = new URL(req.url);
