@@ -1,4 +1,48 @@
-# Logs
+# ------------------------------
+# 🚀 Node / Next.js
+# ------------------------------
+node_modules
+.next/
+out/
+dist/
+build/
+coverage/
+.nyc_output/
+
+# ------------------------------
+# ⚙️ Environment & Config Files
+# ------------------------------
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+!.env.example     # keep template env file
+
+# ------------------------------
+# 🧩 OS & Editor Files
+# ------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+*.sublime*
+*.tmp
+*.temp
+
+# VSCode & JetBrains
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+
+# ------------------------------
+# 📦 Logs
+# ------------------------------
 logs
 *.log
 npm-debug.log*
@@ -7,18 +51,89 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ------------------------------
+# 🧠 TypeScript
+# ------------------------------
+*.tsbuildinfo
+*.tscache
+tsconfig.tsbuildinfo
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# ------------------------------
+# 🎨 Design / Frontend Assets
+# ------------------------------
+*.sass-cache
+*.cache
+.next/cache/
+tailwind.config.js.timestamp*
+
+# ------------------------------
+# 🧰 Misc Build Artifacts
+# ------------------------------
+*.local
+*.lock-wscript
+*.pid
+*.seed
+*.pid.lock
+*.orig
+*.rej
+
+# ------------------------------
+# 🗄️ Prisma / Database
+# ------------------------------
+/prisma/dev.db
+/prisma/dev.db-journal
+/prisma/*.sqlite
+/prisma/migrations/**/steps.json
+/prisma/migrations/**/schema.prisma.tmp
+
+# ------------------------------
+# 🧪 Testing
+# ------------------------------
+/coverage
+/junit.xml
+/test-results.xml
+/.jest-cache
+/.jest
+
+# ------------------------------
+# 🧱 Framework Artifacts
+# ------------------------------
+.next/
+.vercel/
+firebase-debug.log
+firebase.json.backup
+
+# ------------------------------
+# 🧠 AI / OpenAI / LangChain
+# ------------------------------
+/.openai-cache
+/langchain_cache/
+
+# ------------------------------
+# 🧑‍💻 Local Dev & Debug
+# ------------------------------
+*.local
+*.bak
+*.backup
+debug/
+debug.log
+tmp/
+temp/
+
+# ------------------------------
+# 🧩 Yarn / PNPM / Bun
+# ------------------------------
+.pnp.*
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnpm-debug.log*
+bun.lockb
+
+# ------------------------------
+# 🧾 System Folders (Mac/Linux)
+# ------------------------------
+.Trashes
+.nfs*

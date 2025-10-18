@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+
+  surveys       Survey[]    // surveys created by the user
+  responses     Response[]  // responses created by the user
+  datasets      Dataset[]  // user can have many datasets
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @map("refresh_token")
+  access_token      String? @map("access_token")
+  expires_at        Int?    @map("expires_at")
+  token_type        String? @map("token_type")
+  scope             String?
+  id_token          String? @map("id_token")
+  session_state     String? @map("session_state")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Survey {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  questions  String[]
+  createdAt  DateTime   @default(now())
+
+  // 👇 Relation to User (owner)
+  userId     String     @db.ObjectId
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 👇 Relation to responses
+  responses  Response[]
+}
+
+model Response {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  answers    String[]
+  createdAt  DateTime   @default(now())
+
+  // 👇 Relation to Survey
+  surveyId   String     @db.ObjectId
+  survey     Survey     @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+
+  // 👇 Relation to User (who responded)
+  userId     String     @db.ObjectId
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Dataset {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  filename   String
+  summary    Json
+  createdAt  DateTime @default(now())
+
+  // 👇 Relation to the User (dataset owner)
+  userId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
